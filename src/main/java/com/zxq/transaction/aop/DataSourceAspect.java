@@ -42,7 +42,7 @@ public class DataSourceAspect {
      * @param joinPoint
      * @param ex
      */
-    @AfterThrowing(throwing = "ex", pointcut = "execution(* com.zxq.transaction.service.*.*(..))")
+    @AfterThrowing(throwing = "ex", pointcut = "execution(* com.zxq.elkftp.service.*.*(..))")
     public void exceptionDispose(JoinPoint joinPoint, Throwable ex) {
         // 切入方法所属类名
         String className = joinPoint.getTarget().getClass().getName();
