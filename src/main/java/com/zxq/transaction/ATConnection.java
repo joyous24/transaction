@@ -31,273 +31,478 @@ public class ATConnection implements Connection {
         this.atConn = atConn;
     }
 
+    /**
+     * 创建一个 Statement对象，用于将SQL语句发送到数据库
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Statement createStatement() throws SQLException {
-        return null;
+        return atConn.createStatement();
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return null;
+        return atConn.prepareStatement(sql);
     }
 
     @Override
     public CallableStatement prepareCall(String sql) throws SQLException {
-        return null;
+        return atConn.prepareCall(sql);
     }
 
+    /**
+     * 将给定的SQL语句转换为系统的本机SQL语法
+     *
+     * @param sql
+     * @return
+     * @throws SQLException
+     */
     @Override
     public String nativeSQL(String sql) throws SQLException {
-        return null;
+        return atConn.nativeSQL(sql);
     }
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-
+        atConn.setAutoCommit(autoCommit);
     }
 
+    /**
+     * 检索此 Connection对象的当前自动提交模式
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public boolean getAutoCommit() throws SQLException {
-        return false;
+        return atConn.getAutoCommit();
     }
 
+    /**
+     * 使自上次提交/回滚以来所做的所有更改都将永久性，并释放此 Connection对象当前持有的任何数据库锁
+     *
+     * @throws SQLException
+     */
     @Override
     public void commit() throws SQLException {
-
+        atConn.commit();
     }
 
+    /**
+     * 撤消在当前事务中所做的所有更改，并释放此 Connection对象当前持有的任何数据库锁
+     *
+     * @throws SQLException
+     */
     @Override
     public void rollback() throws SQLException {
-
+        atConn.rollback();
     }
 
+    /**
+     * Connection发布此 Connection对象的数据库和JDBC资源，而不是等待它们自动释放
+     *
+     * @throws SQLException
+     */
     @Override
     public void close() throws SQLException {
-
+        atConn.close();
     }
 
+    /**
+     * 检索此 Connection对象是否已关闭
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public boolean isClosed() throws SQLException {
-        return false;
+        return atConn.isClosed();
     }
 
+    /**
+     * 检索 DatabaseMetaData对象包含有关哪个这个数据库的元数据 Connection对象表示的连接
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return null;
+        return atConn.getMetaData();
     }
 
     @Override
     public void setReadOnly(boolean readOnly) throws SQLException {
-
+        atConn.setReadOnly(readOnly);
     }
 
+    /**
+     * 检索此 Connection对象是否处于只读模式
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public boolean isReadOnly() throws SQLException {
-        return false;
+        return atConn.isReadOnly();
     }
 
     @Override
     public void setCatalog(String catalog) throws SQLException {
-
+        atConn.setCatalog(catalog);
     }
 
+    /**
+     * 检索此 Connection对象的当前目录名称
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public String getCatalog() throws SQLException {
-        return null;
+        return atConn.getCatalog();
     }
 
+    /**
+     * 尝试将此 Connection对象的事务隔离级别更改为给定的对象
+     *
+     * @param level
+     * @throws SQLException
+     */
     @Override
     public void setTransactionIsolation(int level) throws SQLException {
-
+        atConn.setTransactionIsolation(level);
     }
 
+    /**
+     * 获取此 Connection对象的当前事务隔离级别
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public int getTransactionIsolation() throws SQLException {
-        return 0;
+        return atConn.getTransactionIsolation();
     }
 
+    /**
+     * 检索通过此 Connection对象的呼叫报告的第一个警告
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public SQLWarning getWarnings() throws SQLException {
-        return null;
+        return atConn.getWarnings();
     }
 
+    /**
+     * 清除为此 Connection对象报告的所有警告
+     *
+     * @throws SQLException
+     */
     @Override
     public void clearWarnings() throws SQLException {
-
+        atConn.clearWarnings();
     }
 
+    /**
+     * 创建一个 Statement对象，将产生 ResultSet对象具有给定类型，并发性和可保存性
+     *
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return null;
+        return atConn.createStatement(resultSetType, resultSetConcurrency);
     }
 
+    /**
+     * 创建一个 PreparedStatement对象，用于将参数化的SQL语句发送到数据库
+     *
+     * @param sql
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @return
+     * @throws SQLException
+     */
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        return null;
+        return atConn.prepareStatement(sql, resultSetType, resultSetConcurrency);
     }
 
+    /**
+     * 创建一个 CallableStatement对象，该对象将生成具有给定类型和并发性的 ResultSet对象
+     *
+     * @param sql
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @return
+     * @throws SQLException
+     */
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-        return null;
+        return atConn.prepareCall(sql, resultSetType, resultSetConcurrency);
     }
 
+    /**
+     * 检索 Map与此相关联的对象 Connection对象
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Map<String, Class<?>> getTypeMap() throws SQLException {
-        return null;
+        return atConn.getTypeMap();
     }
 
     @Override
     public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
-
+        atConn.setTypeMap(map);
     }
 
+    /**
+     * 将使用此 Connection对象创建的 ResultSet对象的默认保持性更改为给定的可保存性
+     *
+     * @param holdability
+     * @throws SQLException
+     */
     @Override
     public void setHoldability(int holdability) throws SQLException {
-
+        atConn.setHoldability(holdability);
     }
 
     @Override
     public int getHoldability() throws SQLException {
-        return 0;
+        return atConn.getHoldability();
     }
 
+    /**
+     * 在当前事务中创建一个未命名的保存点，并返回代表它的新的 Savepoint对象
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Savepoint setSavepoint() throws SQLException {
-        return null;
+        return atConn.setSavepoint();
     }
 
     @Override
     public Savepoint setSavepoint(String name) throws SQLException {
-        return null;
+        return atConn.setSavepoint(name);
     }
 
+    /**
+     * 撤消在当前事务中所做的所有更改，并释放此 Connection对象当前持有的任何数据库锁
+     *
+     * @param savepoint
+     * @throws SQLException
+     */
     @Override
     public void rollback(Savepoint savepoint) throws SQLException {
-
+        atConn.rollback(savepoint);
     }
 
+    /**
+     * 删除指定的 Savepoint和随后 Savepoint从目前的交易对象
+     *
+     * @param savepoint
+     * @throws SQLException
+     */
     @Override
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-
+        atConn.releaseSavepoint(savepoint);
     }
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return null;
+        return atConn.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return null;
+        return atConn.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
+    /**
+     * 创建一个 CallableStatement对象，该对象将生成具有给定类型和并发性的 ResultSet对象
+     *
+     * @param sql
+     * @param resultSetType
+     * @param resultSetConcurrency
+     * @param resultSetHoldability
+     * @return
+     * @throws SQLException
+     */
     @Override
     public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-        return null;
+        return atConn.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-        return null;
+        return atConn.prepareStatement(sql, autoGeneratedKeys);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
-        return null;
+        return atConn.prepareStatement(sql, columnIndexes);
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-        return null;
+        return atConn.prepareStatement(sql, columnNames);
     }
 
+    /**
+     * 构造实现的对象 Clob接口
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Clob createClob() throws SQLException {
-        return null;
+        return atConn.createClob();
     }
 
+    /**
+     * 构造实现的对象 Blob接口
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Blob createBlob() throws SQLException {
-        return null;
+        return atConn.createBlob();
     }
 
     @Override
     public NClob createNClob() throws SQLException {
-        return null;
+        return atConn.createNClob();
     }
 
     @Override
     public SQLXML createSQLXML() throws SQLException {
-        return null;
+        return atConn.createSQLXML();
     }
 
+    /**
+     * 如果连接尚未关闭并且仍然有效，则返回true
+     *
+     * @param timeout
+     * @return
+     * @throws SQLException
+     */
     @Override
     public boolean isValid(int timeout) throws SQLException {
-        return false;
+        return atConn.isValid(timeout);
     }
 
     @Override
     public void setClientInfo(String name, String value) throws SQLClientInfoException {
-
+        atConn.setClientInfo(name, value);
     }
 
     @Override
     public void setClientInfo(Properties properties) throws SQLClientInfoException {
-
+        atConn.setClientInfo(properties);
     }
 
     @Override
     public String getClientInfo(String name) throws SQLException {
-        return null;
+        return atConn.getClientInfo(name);
     }
 
+    /**
+     * 返回包含驱动程序支持的每个客户端信息属性的名称和当前值的列表
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Properties getClientInfo() throws SQLException {
-        return null;
+        return atConn.getClientInfo();
     }
 
+    /**
+     * 用于创建Array对象的Factory方法
+     *
+     * @param typeName
+     * @param elements
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
-        return null;
+        return atConn.createArrayOf(typeName, elements);
     }
 
     @Override
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-        return null;
+        return atConn.createStruct(typeName, attributes);
     }
 
     @Override
     public void setSchema(String schema) throws SQLException {
-
+        atConn.setSchema(schema);
     }
 
+    /**
+     * 检索此 Connection对象的当前模式名称
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public String getSchema() throws SQLException {
-        return null;
+        return atConn.getSchema();
     }
 
+    /**
+     * 终止打开的连接
+     *
+     * @param executor
+     * @throws SQLException
+     */
     @Override
     public void abort(Executor executor) throws SQLException {
-
+        atConn.abort(executor);
     }
 
+    /**
+     * 设置最大周期a Connection或从 Connection创建的 Connection将等待数据库回复任何一个请求
+     *
+     * @param executor
+     * @param milliseconds
+     * @throws SQLException
+     */
     @Override
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-
+        atConn.setNetworkTimeout(executor, milliseconds);
     }
 
+    /**
+     * 检索驱动程序等待数据库请求完成的毫秒数
+     *
+     * @return
+     * @throws SQLException
+     */
     @Override
     public int getNetworkTimeout() throws SQLException {
-        return 0;
+        return atConn.getNetworkTimeout();
     }
 
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return null;
+        return atConn.unwrap(iface);
     }
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return false;
+        return atConn.isWrapperFor(iface);
     }
 }
