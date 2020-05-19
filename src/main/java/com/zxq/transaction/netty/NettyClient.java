@@ -1,7 +1,6 @@
 package com.zxq.transaction.netty;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -14,9 +13,8 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import java.net.InetAddress;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -71,13 +69,13 @@ public class NettyClient {
                     loop.schedule(new Runnable() {
                         @Override
                         public void run() {
-                            System.out.println("not connect service");
+                            log.info("netty client not connect service");
                             start();
                         }
                     }, 1L, TimeUnit.SECONDS);
                 } else {
                     channel = channelFuture.channel();
-                    System.out.println("connected");
+                    log.info("connected");
                 }
             }
         });
@@ -89,7 +87,6 @@ public class NettyClient {
 
     class NettyClientHandler extends SimpleChannelInboundHandler {
         private NettyClient nettyClient;
-        private String tenantId;
         private int attempts = 0;
 
         public NettyClientHandler(NettyClient nettyClient) {
@@ -97,19 +94,19 @@ public class NettyClient {
         }
 
         @Override
-        protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object o) throws Exception {
-            System.out.println("service send message" + o.toString());
+        protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object o) {
+            log.info(o.toString());
         }
 
         @Override
-        public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            System.out.println("output connected!");
+        public void channelActive(ChannelHandlerContext ctx) {
+            log.info("netty output connected!");
             attempts = 0;
         }
 
         @Override
-        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            System.out.println("offline");
+        public void channelInactive(ChannelHandlerContext ctx) {
+            log.info("netty offline");
             //使用过程中断线重连
             final EventLoop eventLoop = ctx.channel().eventLoop();
             if (attempts < 12) {
@@ -130,13 +127,14 @@ public class NettyClient {
             if (evt instanceof IdleStateEvent) {
                 IdleStateEvent event = (IdleStateEvent) evt;
                 if (event.state().equals(IdleState.READER_IDLE)) {
-                    System.out.println("READER_IDLE");
+                    log.info("READER_IDLE");
                 } else if (event.state().equals(IdleState.WRITER_IDLE)) {
+                    String ipAddress = ctx.channel().remoteAddress().toString();
                     //发送心跳，保持长连接
-                    String s = "NettyClient" + System.getProperty("line.separator");
+                    String s = ipAddress + System.getProperty("line.separator");
                     ctx.channel().writeAndFlush(s);  //发送心跳成功
                 } else if (event.state().equals(IdleState.ALL_IDLE)) {
-                    System.out.println("ALL_IDLE");
+                    log.info("ALL_IDLE");
                 }
             }
             super.userEventTriggered(ctx, evt);

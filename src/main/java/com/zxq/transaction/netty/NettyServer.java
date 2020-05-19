@@ -1,7 +1,6 @@
 package com.zxq.transaction.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -95,7 +94,7 @@ public class NettyServer {
     }
 
     public void bind() {
-        System.out.println("service start successful");
+        log.info("netty service start successful");
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         ServerBootstrap bootstrap = new ServerBootstrap();
@@ -105,7 +104,7 @@ public class NettyServer {
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
+                    protected void initChannel(SocketChannel socketChannel) {
                         ChannelPipeline pipeline = socketChannel.pipeline();
                         //特殊分隔符
                         pipeline.addLast(new DelimiterBasedFrameDecoder(Integer.MAX_VALUE,
@@ -136,8 +135,8 @@ public class NettyServer {
         }
 
         @Override
-        protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object o) throws Exception {
-            System.out.println("client say" + o.toString());
+        protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object o) {
+            log.info("netty client say " + o.toString());
             //重置心跳次数
             counter = 0;
         }
@@ -145,7 +144,7 @@ public class NettyServer {
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
             String clientName = ctx.channel().remoteAddress().toString();
-            System.out.println("RemoteAddress:" + clientName + "active!");
+            log.info("netty remote address:" + clientName + " active!");
             nettyServer.setClient(clientName);
             nettyServer.setChannel(clientName, ctx.channel());
             super.channelActive(ctx);
@@ -161,7 +160,7 @@ public class NettyServer {
                     if (counter >= 10) {
                         ctx.channel().close().sync();
                         String clientName = ctx.channel().remoteAddress().toString();
-                        System.out.println("" + clientName + "offline");
+                        log.info("netty " + clientName + " offline...");
                         nettyServer.removeClient(clientName);
                         //判断是否有在线的
                         if (nettyServer.getClientMapSize()) {
@@ -169,7 +168,7 @@ public class NettyServer {
                         }
                     } else {
                         counter++;
-                        System.out.println("loss" + counter + "count HB");
+                        log.info("netty loss " + counter + " count HB");
                     }
                 }
             }
@@ -187,7 +186,7 @@ public class NettyServer {
         Scanner scanner = new Scanner(System.in);
         String msg = "";
         while (!(msg = scanner.nextLine()).equals("exit")) {
-            System.out.println(nettyServer.writeMsg(msg));
+            nettyServer.writeMsg(msg);
         }
     }
 }
