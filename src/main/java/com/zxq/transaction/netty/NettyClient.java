@@ -73,9 +73,6 @@ public class NettyClient {
                             start();
                         }
                     }, 1L, TimeUnit.SECONDS);
-                } else {
-                    channel = channelFuture.channel();
-                    log.info("connected");
                 }
             }
         });
@@ -84,6 +81,24 @@ public class NettyClient {
     public Channel getChannel() {
         return channel;
     }
+
+    /**
+     * 发送消息
+     *
+     * @param msg
+     * @return
+     */
+    public boolean writeMsg(String msg) {
+        if (channel == null) {
+            return true;
+        }
+
+        if (channel.isActive()) {
+            channel.writeAndFlush(msg + System.getProperty("line.separator"));
+        }
+        return false;
+    }
+
 
     class NettyClientHandler extends SimpleChannelInboundHandler {
         private NettyClient nettyClient;
@@ -102,6 +117,7 @@ public class NettyClient {
         public void channelActive(ChannelHandlerContext ctx) {
             log.info("netty output connected!");
             attempts = 0;
+            channel = ctx.channel();
         }
 
         @Override

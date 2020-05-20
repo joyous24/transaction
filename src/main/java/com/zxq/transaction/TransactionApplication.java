@@ -1,6 +1,6 @@
 package com.zxq.transaction;
 
-import com.zxq.transaction.netty.NettyServer;
+import com.zxq.transaction.netty.NettyClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,10 +20,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class TransactionApplication {
 
     @Bean
-    public NettyServer nettyServer() {
-        NettyServer nettyServer = new NettyServer();
-        nettyServer.bind();
-        return nettyServer;
+    public NettyClient nettyClient() {
+        NettyClient nettyClient = new NettyClient("127.0.0.1", 20803);
+        nettyClient.start();
+        return nettyClient;
     }
 
     public static void main(String[] args) {
