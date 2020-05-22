@@ -1,5 +1,7 @@
 package com.zxq.transaction;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -24,6 +26,7 @@ import java.util.concurrent.Executor;
  *
  * @author zhaoxq
  */
+@Slf4j
 public class ATConnection implements Connection {
     private Connection atConn;
 
@@ -66,7 +69,7 @@ public class ATConnection implements Connection {
 
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-        atConn.setAutoCommit(autoCommit);
+        atConn.setAutoCommit(false);
     }
 
     /**
@@ -87,6 +90,7 @@ public class ATConnection implements Connection {
      */
     @Override
     public void commit() throws SQLException {
+        log.info("提交事务。。。");
         atConn.commit();
     }
 
@@ -97,6 +101,7 @@ public class ATConnection implements Connection {
      */
     @Override
     public void rollback() throws SQLException {
+        log.info("回滚事务。。。");
         atConn.rollback();
     }
 
@@ -107,7 +112,8 @@ public class ATConnection implements Connection {
      */
     @Override
     public void close() throws SQLException {
-        atConn.close();
+        log.info("事务假关闭。。。");
+        //atConn.close();
     }
 
     /**
@@ -118,7 +124,11 @@ public class ATConnection implements Connection {
      */
     @Override
     public boolean isClosed() throws SQLException {
-        return atConn.isClosed();
+        boolean isClosed = atConn.isClosed();
+        if (isClosed) {
+            log.info("事务已关闭");
+        }
+        return isClosed;
     }
 
     /**

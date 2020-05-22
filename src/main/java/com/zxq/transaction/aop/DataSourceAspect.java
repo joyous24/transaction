@@ -3,6 +3,9 @@ package com.zxq.transaction.aop;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidPooledConnection;
 import com.zxq.transaction.ATConnection;
+import com.zxq.transaction.ATTransactionGroup;
+import com.zxq.transaction.RecordTransactionGroupUtil;
+import com.zxq.transaction.TransactionStageEnum;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * 切面获取DataSource
@@ -30,10 +34,22 @@ public class DataSourceAspect {
      */
     @Around("execution(* javax.sql.DataSource.getConnection(..))")
     public Connection around(JoinPoint point) throws SQLException {
+        //从数据源获取Connection
         DruidDataSource druidDataSource = (DruidDataSource) point.getTarget();
         DruidPooledConnection druidPooledConnection = druidDataSource.getConnection();
+
         Connection conn = druidPooledConnection.getConnection();
-        return new ATConnection(conn);
+        ATConnection atConnection = new ATConnection(conn);
+
+        //创建事务组
+        String groupId = UUID.randomUUID().toString();
+        ATTransactionGroup atTransactionGroup = new ATTransactionGroup();
+        atTransactionGroup.setCurrentConnection(atConnection);
+        atTransactionGroup.setGroupId(groupId);
+        atTransactionGroup.setCurrentTransactionStageEnum(TransactionStageEnum.INIT_COMMIT);
+        RecordTransactionGroupUtil.put(groupId, atTransactionGroup);
+
+        return atConnection;
     }
 
     /**

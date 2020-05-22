@@ -20,7 +20,7 @@ public class UserService {
     public void save(User user) {
         userDao.insert(user);
 
-        throw new RuntimeException("回滚用户");
+        //throw new RuntimeException("回滚用户");
     }
 
 }
