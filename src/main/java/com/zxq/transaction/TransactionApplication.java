@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 系统服务运行入口
@@ -24,6 +25,11 @@ public class TransactionApplication {
         NettyClient nettyClient = new NettyClient("127.0.0.1", 20803);
         nettyClient.start();
         return nettyClient;
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     public static void main(String[] args) {

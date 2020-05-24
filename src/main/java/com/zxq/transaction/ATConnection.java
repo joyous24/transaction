@@ -67,8 +67,15 @@ public class ATConnection implements Connection {
         return atConn.nativeSQL(sql);
     }
 
+    /**
+     * 自动提交
+     *
+     * @param autoCommit
+     * @throws SQLException
+     */
     @Override
     public void setAutoCommit(boolean autoCommit) throws SQLException {
+        log.info("已取消设置自动提交");
         atConn.setAutoCommit(false);
     }
 
@@ -80,7 +87,9 @@ public class ATConnection implements Connection {
      */
     @Override
     public boolean getAutoCommit() throws SQLException {
-        return atConn.getAutoCommit();
+        boolean autoCommit = atConn.getAutoCommit();
+        log.info("获取自动提交属性" + autoCommit);
+        return autoCommit;
     }
 
     /**
@@ -90,8 +99,20 @@ public class ATConnection implements Connection {
      */
     @Override
     public void commit() throws SQLException {
-        log.info("提交事务。。。");
+        log.info("假提交事务。。。");
+        //atConn.commit();
+    }
+
+    public void commitTransaction() throws SQLException {
         atConn.commit();
+    }
+
+    public void closeTransaction() throws SQLException {
+        atConn.close();
+    }
+
+    public void rollbackTransaction() throws SQLException {
+        atConn.rollback();
     }
 
     /**

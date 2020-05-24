@@ -1,7 +1,5 @@
 package com.zxq.transaction;
 
-import java.sql.Connection;
-
 /**
  * AT事务组
  *
@@ -14,9 +12,9 @@ public class ATTransactionGroup {
     private String groupId;
 
     /**
-     * 当前事务阶段
+     * 事务枚举
      */
-    private TransactionStageEnum currentTransactionStageEnum;
+    private TransactionEnum transactionEnum;
 
     /**
      * 当前数据库事务连接
@@ -24,27 +22,4 @@ public class ATTransactionGroup {
     private ATConnection currentConnection;
 
 
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public ATConnection getCurrentConnection() {
-        return currentConnection;
-    }
-
-    public void setCurrentConnection(ATConnection currentConnection) {
-        this.currentConnection = currentConnection;
-    }
-
-    public TransactionStageEnum getCurrentTransactionStageEnum() {
-        return currentTransactionStageEnum;
-    }
-
-    public void setCurrentTransactionStageEnum(TransactionStageEnum currentTransactionStageEnum) {
-        this.currentTransactionStageEnum = currentTransactionStageEnum;
-    }
 }
