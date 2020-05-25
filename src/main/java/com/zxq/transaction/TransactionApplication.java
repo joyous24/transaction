@@ -1,9 +1,11 @@
 package com.zxq.transaction;
 
 import com.zxq.transaction.netty.NettyClient;
+import com.zxq.transaction.util.SpringContextUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -33,7 +35,8 @@ public class TransactionApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(TransactionApplication.class, args);
+        ApplicationContext app = SpringApplication.run(TransactionApplication.class, args);
+        SpringContextUtil.setApplicationContext(app);
     }
 
 }

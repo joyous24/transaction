@@ -30,6 +30,8 @@ import java.util.concurrent.Executor;
 public class ATConnection implements Connection {
     private Connection atConn;
 
+    private ATTransaction atTransaction = ATTransactionServerManager.getATTransaction("");
+
     public ATConnection(Connection atConn) {
         this.atConn = atConn;
     }
@@ -99,20 +101,24 @@ public class ATConnection implements Connection {
      */
     @Override
     public void commit() throws SQLException {
-        log.info("假提交事务。。。");
-        //atConn.commit();
-    }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    atTransaction.getTask().waitTask();
 
-    public void commitTransaction() throws SQLException {
-        atConn.commit();
-    }
+                    if (atTransaction.getATTransactionType().equals(ATTransactionType.COMMIT)) {
+                        atConn.commit();
+                    } else {
+                        atConn.rollback();
+                    }
 
-    public void closeTransaction() throws SQLException {
-        atConn.close();
-    }
-
-    public void rollbackTransaction() throws SQLException {
-        atConn.rollback();
+                    atConn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /**
@@ -122,8 +128,6 @@ public class ATConnection implements Connection {
      */
     @Override
     public void rollback() throws SQLException {
-        log.info("回滚事务。。。");
-        atConn.rollback();
     }
 
     /**
@@ -133,8 +137,6 @@ public class ATConnection implements Connection {
      */
     @Override
     public void close() throws SQLException {
-        log.info("事务假关闭。。。");
-        //atConn.close();
     }
 
     /**

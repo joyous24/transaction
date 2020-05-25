@@ -32,7 +32,8 @@ public class UserService {
         User user2 = new User();
         user2.setUserName("李四");
         user2.setAge(31);
-        restTemplate.postForEntity("", user2, String.class);
+        userDao.insert(user2);
+       // restTemplate.postForEntity("", user2, String.class);
     }
 
 }

@@ -5,7 +5,7 @@ package com.zxq.transaction;
  *
  * @author zhaoxiqing
  */
-public enum TransactionEnum {
+public enum ATTransactionType {
     /**
      * 提交事务
      */
