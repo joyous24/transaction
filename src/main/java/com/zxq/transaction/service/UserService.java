@@ -36,4 +36,13 @@ public class UserService {
        // restTemplate.postForEntity("", user2, String.class);
     }
 
+    @Transactional
+    @ATTransaction
+    public void save2() {
+        User user = new User();
+        user.setUserName("王五");
+        user.setAge(21);
+        userDao.insert(user);
+    }
+
 }

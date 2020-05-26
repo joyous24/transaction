@@ -19,6 +19,7 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.concurrent.Executor;
 
 /**
@@ -101,24 +102,33 @@ public class ATConnection implements Connection {
      */
     @Override
     public void commit() throws SQLException {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    atTransaction.getTask().waitTask();
+        log.info("提交事务" + ATTransactionServerManager.getGroupId());
+        Random r = new Random();
+        int num = r.nextInt(100000);
+        log.info("休眠时间"+num);
 
-                    if (atTransaction.getATTransactionType().equals(ATTransactionType.COMMIT)) {
-                        atConn.commit();
-                    } else {
-                        atConn.rollback();
-                    }
+        for (int i = 0; i < num*10000; i++) {
 
-                    atConn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        }
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    atTransaction.getTask().waitTask();
+//
+//                    if (atTransaction.getATTransactionType().equals(ATTransactionType.COMMIT)) {
+//                        atConn.commit();
+//                    } else {
+//                        atConn.rollback();
+//                    }
+//
+//                    atConn.close();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     /**

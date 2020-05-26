@@ -24,6 +24,9 @@ public class ATTransactionAspect implements Ordered {
     public void around(ProceedingJoinPoint point) {
         String groupId = ATTransactionServerManager.createATTransactionGroup();
 
+        log.info("开始切面" + groupId);
+        ATTransactionServerManager.setGroupId(groupId);
+
         ATTransaction atTransaction;
         try {
             point.proceed();
@@ -33,6 +36,8 @@ public class ATTransactionAspect implements Ordered {
             throwable.printStackTrace();
         }
         ATTransactionServerManager.addATTransaction(atTransaction);
+
+        log.info("结束切面" + groupId);
     }
 
     @Override

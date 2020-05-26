@@ -16,6 +16,8 @@ public class ATTransactionServerManager {
 
     private static NettyClient nettyClient = (NettyClient) SpringContextUtil.getBean("nettyClient");
 
+    private static String groupId;
+
     /**
      * 创建AT事务
      */
@@ -72,5 +74,13 @@ public class ATTransactionServerManager {
      */
     public static String getTransactionGroupId() {
         return UUID.randomUUID().toString();
+    }
+
+    public static String getGroupId() {
+        return groupId;
+    }
+
+    public static void setGroupId(String groupId) {
+        ATTransactionServerManager.groupId = groupId;
     }
 }
