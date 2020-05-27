@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.zxq.transaction.netty.NettyClient;
 import com.zxq.transaction.util.SpringContextUtil;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 记录事务组
@@ -12,17 +14,15 @@ import java.util.UUID;
  * @author zhaoxiqing
  */
 public class ATTransactionServerManager {
-    private static ATTransaction atTransaction;
-
     private static NettyClient nettyClient = (NettyClient) SpringContextUtil.getBean("nettyClient");
 
-    private static String groupId;
+    private static Map<String, ATTransaction> transactionCache = new ConcurrentHashMap<>(16);
 
     /**
      * 创建AT事务
      */
     public static String createATTransactionGroup() {
-        String groupId = getTransactionGroupId();
+        String groupId = getUUId();
 
         JSONObject transaction = new JSONObject();
         transaction.put("command", "create");
@@ -40,8 +40,9 @@ public class ATTransactionServerManager {
      * @return
      */
     public static ATTransaction createATTransaction(String groupId, ATTransactionType ATTransactionType) {
-        String transactionId = getTransactionGroupId();
+        String transactionId = getUUId();
         ATTransaction atTransaction = new ATTransaction(transactionId, groupId, ATTransactionType);
+        transactionCache.put(groupId, atTransaction);
         return atTransaction;
     }
 
@@ -52,18 +53,17 @@ public class ATTransactionServerManager {
      */
     public static void addATTransaction(ATTransaction atTransaction) {
         JSONObject transaction = new JSONObject();
+        transaction.put("command", "add");
         transaction.put("groupId", atTransaction.getGroupId());
         transaction.put("transactionId", atTransaction.getTransactionId());
         transaction.put("transactionType", atTransaction.getATTransactionType());
-        transaction.put("command", "add");
 
-        ATTransactionServerManager.atTransaction = atTransaction;
 
         nettyClient.writeMsg(transaction.toJSONString());
     }
 
     public static ATTransaction getATTransaction(String groupId) {
-        return ATTransactionServerManager.atTransaction;
+        return transactionCache.get(groupId);
     }
 
 
@@ -72,15 +72,7 @@ public class ATTransactionServerManager {
      *
      * @return
      */
-    public static String getTransactionGroupId() {
+    public static String getUUId() {
         return UUID.randomUUID().toString();
-    }
-
-    public static String getGroupId() {
-        return groupId;
-    }
-
-    public static void setGroupId(String groupId) {
-        ATTransactionServerManager.groupId = groupId;
     }
 }

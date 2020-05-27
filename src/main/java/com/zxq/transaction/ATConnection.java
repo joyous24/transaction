@@ -19,7 +19,6 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.Executor;
 
 /**
@@ -31,10 +30,11 @@ import java.util.concurrent.Executor;
 public class ATConnection implements Connection {
     private Connection atConn;
 
-    private ATTransaction atTransaction = ATTransactionServerManager.getATTransaction("");
+    private String groupId;
 
-    public ATConnection(Connection atConn) {
+    public ATConnection(Connection atConn, String groupId) {
         this.atConn = atConn;
+        this.groupId = groupId;
     }
 
     /**
@@ -102,33 +102,33 @@ public class ATConnection implements Connection {
      */
     @Override
     public void commit() throws SQLException {
-        log.info("提交事务" + ATTransactionServerManager.getGroupId());
-        Random r = new Random();
-        int num = r.nextInt(100000);
-        log.info("休眠时间"+num);
-
-        for (int i = 0; i < num*10000; i++) {
-
-        }
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    atTransaction.getTask().waitTask();
+//        Random r = new Random();
+//        int num = r.nextInt(100000);
+//        log.info("休眠时间" + num);
 //
-//                    if (atTransaction.getATTransactionType().equals(ATTransactionType.COMMIT)) {
-//                        atConn.commit();
-//                    } else {
-//                        atConn.rollback();
-//                    }
+//        for (int i = 0; i < num * 10000; i++) {
 //
-//                    atConn.close();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
+//        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ATTransaction atTransaction = ATTransactionServerManager.getATTransaction(groupId);
+                    atTransaction.getTask().waitTask();
+
+                    if (atTransaction.getATTransactionType().equals(ATTransactionType.COMMIT)) {
+                        atConn.commit();
+                    } else {
+                        atConn.rollback();
+                    }
+
+                    atConn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /**
@@ -157,11 +157,7 @@ public class ATConnection implements Connection {
      */
     @Override
     public boolean isClosed() throws SQLException {
-        boolean isClosed = atConn.isClosed();
-        if (isClosed) {
-            log.info("事务已关闭");
-        }
-        return isClosed;
+        return atConn.isClosed();
     }
 
     /**

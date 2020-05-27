@@ -172,7 +172,7 @@ public class NettyClient {
                 } else if (event.state().equals(IdleState.WRITER_IDLE)) {
                     String ipAddress = ctx.channel().remoteAddress().toString();
                     //发送心跳，保持长连接
-                    String s = ipAddress + System.getProperty("line.separator");
+                    String s = "heartbeat," + ipAddress + System.getProperty("line.separator");
                     ctx.channel().writeAndFlush(s);  //发送心跳成功
                 } else if (event.state().equals(IdleState.ALL_IDLE)) {
                     log.info("ALL_IDLE");

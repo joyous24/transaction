@@ -15,13 +15,17 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 public class UserService {
-    @Autowired
     private UserMapper userDao;
 
-    @Autowired
     private RestTemplate restTemplate;
 
-    @Transactional
+    @Autowired
+    public UserService(UserMapper userDao, RestTemplate restTemplate) {
+        this.userDao = userDao;
+        this.restTemplate = restTemplate;
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
     @ATTransaction
     public void save() {
         User user = new User();
@@ -33,10 +37,10 @@ public class UserService {
         user2.setUserName("李四");
         user2.setAge(31);
         userDao.insert(user2);
-       // restTemplate.postForEntity("", user2, String.class);
+        // restTemplate.postForEntity("", user2, String.class);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = {Exception.class})
     @ATTransaction
     public void save2() {
         User user = new User();
