@@ -1,5 +1,6 @@
 package com.zxq.transaction.controller;
 
+import com.zxq.transaction.model.User;
 import com.zxq.transaction.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,4 @@ public class UserController {
         userService.save2();
         return true;
     }
-
 }

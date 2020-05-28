@@ -29,7 +29,11 @@ public class ATTransactionAspect implements Ordered {
 
     @Around("@annotation(com.zxq.transaction.annnoction.ATTransaction)")
     public void around(ProceedingJoinPoint point) {
-        String groupId = ATTransactionServerManager.createATTransactionGroup();
+        String groupId = ATTransactionServerManager.getGroupId();
+        if (groupId == null || "".equals(groupId)) {
+            groupId = ATTransactionServerManager.createATTransactionGroup();
+        }
+
         atConnectionCache.setGroupId(groupId);
         log.info("开始切面" + groupId);
 
@@ -45,6 +49,8 @@ public class ATTransactionAspect implements Ordered {
         } catch (Throwable throwable) {
             atTransaction = ATTransactionServerManager.createATTransaction(groupId, ATTransactionType.ROLLBACK);
             throwable.printStackTrace();
+        } finally {
+            ATTransactionServerManager.setGroupId("");
         }
 
         ATTransactionServerManager.addATTransaction(atTransaction);

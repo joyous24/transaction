@@ -18,6 +18,8 @@ public class ATTransactionServerManager {
 
     private static Map<String, ATTransaction> transactionCache = new ConcurrentHashMap<>(16);
 
+    private static String groupId;
+
     /**
      * 创建AT事务
      */
@@ -66,7 +68,6 @@ public class ATTransactionServerManager {
         return transactionCache.get(groupId);
     }
 
-
     /**
      * 获取事务组ID
      *
@@ -74,5 +75,13 @@ public class ATTransactionServerManager {
      */
     public static String getUUId() {
         return UUID.randomUUID().toString();
+    }
+
+    public static String getGroupId() {
+        return groupId;
+    }
+
+    public static void setGroupId(String groupId) {
+        ATTransactionServerManager.groupId = groupId;
     }
 }

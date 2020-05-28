@@ -34,10 +34,9 @@ public class UserService {
         userDao.insert(user);
 
         User user2 = new User();
-        user2.setUserName("李四");
-        user2.setAge(31);
-        userDao.insert(user2);
-        // restTemplate.postForEntity("", user2, String.class);
+        user2.setUserName("远程调用");
+        user2.setAge(88);
+        restTemplate.postForEntity("http://127.0.0.1:8086/saveUserInfo", user2, String.class);
     }
 
     @Transactional(rollbackFor = {Exception.class})

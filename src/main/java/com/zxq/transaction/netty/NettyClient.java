@@ -126,8 +126,20 @@ public class NettyClient {
             JSONObject jsonObject = JSON.parseObject(o.toString());
             String groupId = jsonObject.getString("groupId");
             String command = jsonObject.getString("command");
+            log.info("netty客户端接收groupId:" + groupId);
+            log.info("netty客户端接收command:" + command);
+
+            //接收事务组信息
+            if ("transactionGroup".equals(command)) {
+                ATTransactionServerManager.setGroupId(groupId);
+                return;
+            }
 
             ATTransaction atTransaction = ATTransactionServerManager.getATTransaction(groupId);
+            if (atTransaction == null) {
+                log.info("未获取到事务" + groupId);
+                return;
+            }
 
             if ("rollback".equals(command)) {
                 atTransaction.setATTransactionType(ATTransactionType.ROLLBACK);
