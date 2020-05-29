@@ -7,6 +7,7 @@ import com.zxq.transaction.util.SpringContextUtil;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 记录事务组
@@ -18,7 +19,7 @@ public class ATTransactionServerManager {
 
     private static Map<String, ATTransaction> transactionCache = new ConcurrentHashMap<>(16);
 
-    private static String groupId;
+    private static AtomicReference<String> groupId = new AtomicReference();
 
     /**
      * 创建AT事务
@@ -78,10 +79,14 @@ public class ATTransactionServerManager {
     }
 
     public static String getGroupId() {
-        return groupId;
+        return groupId.get();
     }
 
     public static void setGroupId(String groupId) {
-        ATTransactionServerManager.groupId = groupId;
+        ATTransactionServerManager.groupId.set(groupId);
+    }
+
+    public static void clearGroupId() {
+        ATTransactionServerManager.groupId.set("");
     }
 }

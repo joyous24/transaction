@@ -138,6 +138,7 @@ public class NettyClient {
             ATTransaction atTransaction = ATTransactionServerManager.getATTransaction(groupId);
             if (atTransaction == null) {
                 log.info("未获取到事务" + groupId);
+                ATTransactionServerManager.clearGroupId();
                 return;
             }
 

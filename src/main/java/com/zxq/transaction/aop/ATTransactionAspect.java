@@ -22,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ATTransactionAspect implements Ordered {
     private ATConnectionCache atConnectionCache;
 
-
     public ATTransactionAspect(ATConnectionCache atConnectionCache) {
         this.atConnectionCache = atConnectionCache;
     }
@@ -34,12 +33,12 @@ public class ATTransactionAspect implements Ordered {
             groupId = ATTransactionServerManager.createATTransactionGroup();
         }
 
-        atConnectionCache.setGroupId(groupId);
         log.info("开始切面" + groupId);
 
         ATTransaction atTransaction;
         try {
             atTransaction = ATTransactionServerManager.createATTransaction(groupId, ATTransactionType.COMMIT);
+            atConnectionCache.setGroupId(groupId);
             point.proceed();
 
             //处理切面事务冲突
@@ -50,7 +49,7 @@ public class ATTransactionAspect implements Ordered {
             atTransaction = ATTransactionServerManager.createATTransaction(groupId, ATTransactionType.ROLLBACK);
             throwable.printStackTrace();
         } finally {
-            ATTransactionServerManager.setGroupId("");
+            ATTransactionServerManager.clearGroupId();
         }
 
         ATTransactionServerManager.addATTransaction(atTransaction);
